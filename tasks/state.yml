@@ -1,7 +1,7 @@
 ---
 - name: ensure nut-driver started
   service: >
-    name={{nut_driver_service}}
+    name={{nut_driver_service}}@ups01
     state=started
     enabled=yes
   when: >
