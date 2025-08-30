@@ -7,3 +7,11 @@
     group={{nut_user}}
     mode=0640
   register: nut_conf_result
+
+- name: add libusb symlink for nut-scanner
+  ansible.builtin.file:
+    src: /usr/lib64/libusb-1.0.so.0.3.0
+    dest: /usr/lib64/libusb-1.0.so
+    state: link
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version | int >= 9
+  register: libusb_symlink_result
