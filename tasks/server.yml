@@ -23,7 +23,7 @@
     dest={{nut_config_path}}/upsd.conf
     owner=root
     group={{nut_user}}
-    mode=0644
+    mode=0640
   notify:
     - restart nut-server
   tags: nut
