@@ -7,3 +7,7 @@
     group={{nut_user}}
     mode=0640
   register: nut_conf_result
+- name: install lsbutils
+  dnf:
+    name: usbutils
+    state: present
