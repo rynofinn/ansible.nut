@@ -1,57 +1,65 @@
 ---
-- name: install symlink so nut-scanner can find libusb
-  file:
+- name: Install symlink so nut-scanner can find libusb
+  ansible.builtin.file:
     src: /usr/lib64/libusb-1.0.so.0.5.0
     dest: /usr/lib64/libusb-1.0.so
     state: link
     owner: root
     group: root
+  tags: nut
 
-- name: run nut-scanner
-  shell: nut-scanner
+- name: Install nut server
+  ansible.builtin.package:
+    name: "{{ nut_server_package }}"
+    state: present
+  tags: packages
 
-- name: install nut server
-  package: >
-    name={{nut_server_package}}
-    state=latest
+- name: Run nut-scanner
+  ansible.builtin.shell: nut-scanner
+  changed_when: false
+  tags: nut
 
-- name: configure ups.conf
-  template: >
-    src=ups.conf.j2
-    dest={{nut_config_path}}/ups.conf
-    owner=root
-    group={{nut_user}}
-    mode=0644
+- name: Configure ups.conf
+  ansible.builtin.template:
+    src: ups.conf.j2
+    dest: "{{ nut_config_path }}/ups.conf"
+    owner: root
+    group: "{{ nut_user }}"
+    mode: '0644'
   notify:
     - restart nut-server
     - restart nut-driver
+  tags: nut
 
-- name: configure upsd.conf
-  template: >
-    src=upsd.conf.j2
-    dest={{nut_config_path}}/upsd.conf
-    owner=root
-    group={{nut_user}}
-    mode=0644
+- name: Configure upsd.conf
+  ansible.builtin.template:
+    src: upsd.conf.j2
+    dest: "{{ nut_config_path }}/upsd.conf"
+    owner: root
+    group: "{{ nut_user }}"
+    mode: '0644'
   notify:
     - restart nut-server
+  tags: nut
 
-- name: configure upsd.users
-  template: >
-    src=upsd.users.j2
-    dest={{nut_config_path}}/upsd.users
-    owner=root
-    group={{nut_user}}
-    mode=0640
+- name: Configure upsd.users
+  ansible.builtin.template:
+    src: upsd.users.j2
+    dest: "{{ nut_config_path }}/upsd.users"
+    owner: root
+    group: "{{ nut_user }}"
+    mode: '0640'
   notify:
     - restart nut-server
+  tags: nut
 
-- name: install udev rules
-  copy: >
-    src=files/52-nut-usbups.rules
-    dest=/etc/udev/rules.d/52-nut-usbups.rules
-    mode=0644
-    group=root
-    owner=root
+- name: Install udev rules
+  ansible.builtin.copy:
+    src: 52-nut-usbups.rules
+    dest: /etc/udev/rules.d/52-nut-usbups.rules
+    mode: '0644'
+    group: root
+    owner: root
   notify:
     - restart nut-driver
+  tags: nut

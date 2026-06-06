@@ -1,27 +1,31 @@
 ---
-- name: ensure nut-driver started
-  service: >
-    name={{nut_driver_service}}
-    state=started
-    enabled=yes
+- name: Ensure nut-driver started
+  ansible.builtin.service:
+    name: "{{ nut_driver_service }}"
+    state: started
+    enabled: true
   when: >
     nut_nut_conf.MODE == 'netserver' or
     nut_nut_conf.MODE == 'standalone'
-- name: ensure nut-monitor started
-  service: >
-    name={{nut_client_service}}
-    state=started
-    enabled=yes
+  tags: nut
+
+- name: Ensure nut-monitor started
+  ansible.builtin.service:
+    name: "{{ nut_client_service }}"
+    state: started
+    enabled: true
   when: >
     nut_nut_conf.MODE == 'netserver' or
     nut_nut_conf.MODE == 'netclient' or
     nut_nut_conf.MODE == 'standalone'
+  tags: nut
 
-- name: ensure nut-server started
-  service: >
-    name={{nut_server_service}}
-    state=started
-    enabled=yes
+- name: Ensure nut-server started
+  ansible.builtin.service:
+    name: "{{ nut_server_service }}"
+    state: started
+    enabled: true
   when: >
     nut_nut_conf.MODE == 'netserver' or
     nut_nut_conf.MODE == 'standalone'
+  tags: nut

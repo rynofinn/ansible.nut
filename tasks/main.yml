@@ -1,21 +1,21 @@
 ---
-- include_vars: "{{ ansible_facts['distribution'] }}.yml"
+- ansible.builtin.include_vars: "{{ ansible_facts['distribution'] }}.yml"
 
-- include_tasks: server.yml
+- ansible.builtin.include_tasks: server.yml
   when: >
     nut_nut_conf.MODE == 'netserver' or
     nut_nut_conf.MODE == 'standalone'
 
-- include_tasks: client.yml
-  when: >
-    nut_nut_conf.MODE == 'netserver' or
-    nut_nut_conf.MODE == 'netclient' or
-    nut_nut_conf.MODE == 'standalone'
-
-- include_tasks: common.yml
+- ansible.builtin.include_tasks: client.yml
   when: >
     nut_nut_conf.MODE == 'netserver' or
     nut_nut_conf.MODE == 'netclient' or
     nut_nut_conf.MODE == 'standalone'
 
-- include_tasks: state.yml
+- ansible.builtin.include_tasks: common.yml
+  when: >
+    nut_nut_conf.MODE == 'netserver' or
+    nut_nut_conf.MODE == 'netclient' or
+    nut_nut_conf.MODE == 'standalone'
+
+- ansible.builtin.include_tasks: state.yml
