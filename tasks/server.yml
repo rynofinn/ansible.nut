@@ -1,4 +1,10 @@
 ---
+- name: Check whether libusb shared object exists
+  ansible.builtin.stat:
+    path: /usr/lib64/libusb-1.0.so.0.5.0
+  register: libusb_so
+  tags: nut
+
 - name: Install symlink so nut-scanner can find libusb
   ansible.builtin.file:
     src: /usr/lib64/libusb-1.0.so.0.5.0
@@ -6,6 +12,7 @@
     state: link
     owner: root
     group: root
+  when: libusb_so.stat.exists
   tags: nut
 
 - name: Install nut server
@@ -14,6 +21,11 @@
     state: present
   tags: packages
 
+- name: Enable nut server service
+  ansible.builtin.service:
+    name: nut-server
+    state: enabled
+  
 - name: Run nut-scanner
   ansible.builtin.shell: nut-scanner
   changed_when: false
