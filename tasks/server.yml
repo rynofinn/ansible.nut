@@ -24,10 +24,11 @@
 - name: Enable nut server service
   ansible.builtin.service:
     name: nut-server
-    state: enabled
+    enabled: true
+    state: started
   
 - name: Run nut-scanner
-  ansible.builtin.shell: nut-scanner
+  ansible.builtin.shell: nut-scanner -U
   changed_when: false
   tags: nut
 
